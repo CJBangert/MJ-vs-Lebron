@@ -20,7 +20,8 @@ The tutorial should be self-contained as an Rmarkdown document, and delivered as
 In general, the tutorial should contain at least 1500 words of prose and 150 lines of (nonpadded, legitimate) R code, along with appropriate documentation, visualization, and links to any external information that might help the reader.
 
 #Get data 
-
+ 
+ May 9, 2018 - May 9, 2019
 ```{r}
 library(tidyverse) ;
 library(httr) ; 
@@ -32,6 +33,6 @@ library(jsonlite)
 csv <- read_csv("bitcoin_prices_2018_2019.csv")  
 df<- csv%>% data.frame()
 
-
+df
 ```
 
