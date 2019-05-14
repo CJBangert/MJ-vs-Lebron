@@ -116,7 +116,7 @@ per100poss
 #We see that the error column in advanced is named X19 and X24
 
 advanced$X19 <- NULL
-advanced$X23 <- NULL
+advanced$X24 <- NULL
  
 names(advanced) <- c("rank", "player", "year_from", "year_to", "games_played", "min_played", "eff_rating", "true_shooting_percent", "3p_attempt_rate", "ft_attempt_rate", "off_rebound_percent", "def_rebound_percent", "total_rebound_percent", "assist_percent", "steal_percent", "block_percent", "turnover_percent", "usage_percent", "off_win_share", "def_win_share", "win_share", "ws_per48min", "off_plus_minus", "def_plus_minus", "plus_minus", "value_over_replace")
 advanced
