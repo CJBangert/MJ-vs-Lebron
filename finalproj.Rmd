@@ -21,17 +21,48 @@ In general, the tutorial should contain at least 1500 words of prose and 150 lin
 
 #Get data 
 
-```{r}
-library(tidyverse) ;
-library(httr) ; 
+```{r data}
+library(tidyverse)
+library(httr)  
 library(jsonlite)
-#path <-
-#request <- GET(path)
-#response <- content(request, as = "text", encoding = "UTF-8")
-#write.csv(csv, "bitcoin_prices_2018_2019.csv")
-csv <- read_csv("bitcoin_prices_2018_2019.csv")  
-df<- csv%>% data.frame()
+
+csv <- read_csv("pergame_data.csv")  
+pergame <- csv %>% data.frame()
+pergame
+
+csv1 <- read_csv("totals_data.csv")
+totals <- csv1 %>% data.frame()
+totals
+
+csv2 <- read_csv("per36min.csv")
+per36min <- csv1 %>% data.frame()
+per36min
+
+csv3 <- read_csv("per100poss.csv")
+per100poss <- csv3 %>% data.frame()
+per100poss
+
+csv4 <- read_csv("advanced.csv")
+advanced <- csv4 %>% data.frame()
+advanced
+
+```
+- *****
+
+
+#Basic Operations
+
+- To make the data column names more recognizable of what they mean, we are going to use some basic R operations to change the column names and even delete columns as a whole.
+
+```{r basics}
+
+names(pergame) <- c("rank", "player", "year_from", "year_to", "games_played", "games_stared", "min_played", "fg_made", "fg_attempt", "fg_percent", "3p_made", "3p_attempt", "3p_percent", "2p_made", "2p_attempt", "2p_percent", "eff_fg_percent", "ft_att", "ft_made", "ft_percent", "off_rebound", "def_rebound", "total_rebound", "assist", "steals", "blocks", "turnovers", "fouls", "points")
+
+
+pergame
 
 
 ```
+
+
 
