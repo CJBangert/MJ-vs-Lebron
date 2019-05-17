@@ -22,10 +22,7 @@ In general, the tutorial should contain at least 1500 words of prose and 150 lin
 #Get data 
  
  May 9, 2018 - May 9, 2019
-```{r}
-library(tidyverse) ;
-library(httr) ; 
-```
+
 ```{r data}
 library(tidyverse)
 library(httr)  
@@ -57,7 +54,7 @@ advanced
 - *****
 
 
-#Basic Operations
+#Basic Operations and Tidying
 
 - To make the data column names more recognizable of what they mean, we are going to use some basic R operations to change the column names and even delete columns as a whole.
 
@@ -122,6 +119,48 @@ names(advanced) <- c("rank", "player", "year_from", "year_to", "games_played", "
 advanced
 
 ```
+
+#Visualization
+A good way to compare players is by efficiency rating, which is calculated by the following formula (notice the embedded LATEX):
+$$\frac{(Points + Rebounds + Assists + Steals + Blocks ??? MissedFieldGoals ??? MissedFreeThrows - Turnovers)}  {GamesPlayed} $$
+
+As we can see from the data, Lebron and Jordan are very close in these ratings: Jordan's efficiency rating is 27.9, and Lebron's is only slightly lower. This is illustrated in the following bar plot:
+
+```{r plottingMJvsJordan}
+#to make a bar plot, you can use the ggplot() function. Here, I set the x axis to be the players, and the y axis to be the efficiencty rating. I also changed the color of the outline to red and the fill to steel blue, because it looks cool. I also used the minimal theme here. 
+advanced %>% ggplot(aes(x=player, y = eff_rating))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme_minimal()
+```
+As you can see from the plot, you can barely notice any difference between the two. Further hypothesis testing is required to see if this difference is signnificant. To be able to get some context to do this, we have to pull in more data on the efficiency rating of compaerable players. To do this, we're going to scrape data from basketball-reference.com using the rvest package.
+
+```{r scrape_data}
+library("rvest")
+url <- "https://www.basketball-reference.com/leaders/per_career.html#nba::none"
+
+best_players_raw <- url %>%
+  read_html() %>%
+  html_nodes("table") %>% .[1] %>%
+  html_table()
+best_players <- best_players_raw %>% as.data.frame() 
+#rename the "PER" column to better indicate what it stands for
+names(best_players)[3] <-  "Efficiency Rating"
+best_players
+```
+*Indicates Hall of Fame Membership
+Now, we have data on the efficiency ratings of the best 250 NBA players in history (best in regard to this statistic). Lets look at a plot to try and get a visualization of how they compare to each other.
+```{r visualize_best}
+#notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation.
+best_players %>% ggplot(aes(x=Player, y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5))
+```
+
+From that plot we can see that there is some variation amongnst the top players. The two tallest bars are MJ and Lebron.
+
+# Hypothesis Testing
+
+So, to see if there is a statistically significant difference between Michael Jordan and Lebron James' player efficiency ratings, we need to fo some hypothesis testing.
+
+Null Hypothesis: Michael Jordan's Player Efficiency Rating being higher than Lebron's is likely due to random variation.
+
+
 
 
 
