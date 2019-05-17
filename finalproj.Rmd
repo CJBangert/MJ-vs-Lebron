@@ -143,7 +143,22 @@ advanced
 *Indicates Hall of Fame Membership
 
 #Visualization
+
 ###A good way to compare players is by efficiency rating, which is calculated by the following formula (notice the embedded LATEX):
+
+Creating plots is a great way to help readers visualize the data. Here's a simple plot displaying field goals made per 36 minutes of playing time:
+
+```{r firstPlot}
+
+per36min %>% ggplot(aes(x = player, y = fg_made)) + geom_bar(stat = "identity", color = "red") + labs(title = "Field Goals Made Per 36 Minutes of Playing Time")
+
+```
+Looks good for MJ here. 
+
+Here's 
+
+A good way to compare players is by efficiency rating, which is calculated by the following formula (notice the embedded LATEX):
+
 $$\frac{(Points + Rebounds + Assists + Steals + Blocks + MissedFieldGoals + MissedFreeThrows - Turnovers)}  {GamesPlayed} $$
 
 ###As we can see from the data, Lebron and Jordan are very close in these ratings: Jordan's efficiency rating is 27.9, and Lebron's is only slightly lower. This is illustrated in the following bar plot:
@@ -184,11 +199,12 @@ best_players
 
 Now, we have data on the efficiency ratings of the best 250 NBA players in history (best in regard to this statistic). Lets look at a plot to try and get a visualization of how they compare to each other.
 ```{r visualize_best}
-#notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation.
-best_players %>% ggplot(aes(x=Player, y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5))
+#notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
+best_players %>% ggplot(aes(x=reorder(Player, `Efficiency Rating`), y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5))
 ```
 
 From that plot we can see that there is some variation amongnst the top players. The two tallest bars are MJ and Lebron.
+
 
 # Hypothesis Testing
 
