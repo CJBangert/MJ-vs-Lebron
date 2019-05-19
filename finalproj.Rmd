@@ -164,12 +164,9 @@ Notice the minutes_played, games_played, year_from and year_to statistics have n
 library(SparkR)
 advanced_prepped<- within(advanced, rm("min_played", "year_from", "year_to", "games_played"))
 #advanced_prepped <- advanced_prepped %>% group_by("player")
-colnames(advanced_prepped)
-vals <- c("rank","eff_rating", "true_shooting_percent", "3p_attempt_rate",      
-  "ft_attempt_rate" , "off_rebound_percent" ,  "def_rebound_percent",   "total_rebound_percent", "assist_percent",       
- "steal_percent","block_percent","turnover_percent", "usage_percent", "off_win_share" ,"def_win_share", "win_share" ,"ws_per48min",   "off_plus_minus","def_plus_minus",  "plus_minus", "value_over_replace")
-advanced_prepped <- melt(advanced_prepped, id.vars= vals)
-ggplot(advanced_prepped, aes(, value)) + geom_bar(aes(fill = variable), 
+#colnames(advanc)
+advanced_prepped <- melt(advanced_prepped, id.vars=c("player") )
+ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable), 
    width = 0.4, position = position_dodge(width=0.5), stat="identity") +  
    theme(legend.position="top", legend.title = 
    element_blank(),axis.title.x=element_blank(), 
