@@ -232,7 +232,7 @@ best_players
 Now, we have data on the efficiency ratings of the best 250 NBA players in history (best in regard to this statistic). Lets look at a plot to try and get a visualization of how they compare to each other.
 
 
-Notice that we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
+Notice that we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation between players. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
 ```{r visualize_best, warning=FALSE, message=FALSE}
 
 #notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
@@ -244,7 +244,7 @@ From that plot we can see that there is some variation amongnst the top players.
 
 # Hypothesis Testing
 
-So, to see if there is a statistically significant difference between Michael Jordan and Lebron James' player efficiency ratings, we need to fo some hypothesis testing.
+So, to see if there is a statistically significant difference between Michael Jordan and Lebron James' player efficiency ratings, we need to do some hypothesis testing.
 
 Null Hypothesis: Michael Jordan's Player Efficiency Rating being higher than Lebron's is likely due to random variation.
 
