@@ -141,7 +141,7 @@ advanced
 
 Creating plots is a great way to help readers visualize the data. Here's a simple plot displaying field goals made per 36 minutes of playing time:
 
-```{r firstPlot}
+```{r firstPlot , warning=FALSE, message=FALSE}
 
 per36min %>% ggplot(aes(x = player, y = fg_made)) + geom_bar(stat = "identity", color = "red") + labs(title = "Field Goals Made Per 36 Minutes of Playing Time")
 
@@ -150,7 +150,7 @@ Looks good for MJ here.
 
 Here's another plot comparing the two, but we're going to make a comparison of more then one stat all in one plot.
 
-```{r anotherplot}
+```{r anotherplot, warning=FALSE, message=FALSE}
 library(reshape2)
 advanced_prepped <- melt(advanced, id.vars='player')
  ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable), 
@@ -159,12 +159,11 @@ advanced_prepped <- melt(advanced, id.vars='player')
    element_blank(),axis.title.x=element_blank(), 
    axis.title.y=element_blank())
 ```
-Notice the minutes_played, games_played, year_from and year_to statistics have numbers that are way higher than the other statistics, so it throws the scale off. We can filter that out to get a better-looking plot:
-```{r drop_cols}
+Notice the minutes_played, games_played, year_from and year_to statistics have numbers that are way higher than the other statistics, so it throws the scale off. Also, the rank column is irrelevant. We can filter that out to get a better-looking plot:
+```{r drop_cols, warning=FALSE, message=FALSE}
 library(SparkR)
-advanced_prepped<- within(advanced, rm("min_played", "year_from", "year_to", "games_played"))
-#advanced_prepped <- advanced_prepped %>% group_by("player")
-#colnames(advanc)
+advanced_prepped<- within(advanced, rm("min_played", "year_from", "year_to", "games_played","rank"))
+
 advanced_prepped <- melt(advanced_prepped, id.vars=c("player") )
 ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable), 
    width = 0.4, position = position_dodge(width=0.5), stat="identity") +  
@@ -179,13 +178,13 @@ $$\frac{(Points + Rebounds + Assists + Steals + Blocks + MissedFieldGoals + Miss
 
 As we can see from the data, Lebron and Jordan are very close in these ratings: Jordan's efficiency rating is 27.9, and Lebron's is only slightly lower. This is illustrated in the following bar plot:
 
-```{r plottingMJvsJordan}
+```{r plottingMJvsJordan, warning=FALSE, message=FALSE}
 #to make a bar plot, you can use the ggplot() function. Here, I set the x axis to be the players, and the y axis to be the efficiencty rating. I also changed the color of the outline to red and the fill to steel blue, because it looks cool. I also used the minimal theme here. 
 advanced %>% ggplot(aes(x=player, y = eff_rating))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme_minimal()
 ```
 As you can see from the plot, you can barely notice any difference between the two. Further hypothesis testing is required to see if this difference is signnificant. To be able to get some context to do this, we have to pull in more data on the efficiency rating of compaerable players. To do this, we're going to scrape data from basketball-reference.com using the rvest package.
 
-```{r scrape_data}
+```{r scrape_data, warning=FALSE, message=FALSE}
 library("rvest")
 url <- "https://www.basketball-reference.com/leaders/per_career.html#nba::none"
 
@@ -200,7 +199,7 @@ best_players
 ```
 *Indicates Hall of Fame Membership
 Now, we have data on the efficiency ratings of the best 250 NBA players in history (best in regard to this statistic). Lets look at a plot to try and get a visualization of how they compare to each other.
-```{r visualize_best}
+```{r visualize_best, warning=FALSE, message=FALSE}
 #notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
 best_players %>% ggplot(aes(x=reorder(Player, `Efficiency Rating`), y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5))
 ```
