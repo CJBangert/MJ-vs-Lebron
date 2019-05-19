@@ -189,8 +189,10 @@ names(best_players)[3] <-  "Efficiency Rating"
 best_players
 ```
 
+An asterisk next to a player's name indicates that they are a hall of famer. Because we now have a much larger dataset it is a good idea to add a logical column to the data frame that will indicate whether a player is a hall of famer or not. You should also remove the asterisk next to each player that has one. This is shown below:
+
 ```{r tidy_data}
-#Add new column for hall of famer or not, then remove star from player
+
 best_players["Hall Of Famer"] <- ifelse(grepl("\\S+\\s\\S+\\*", best_players$Player), TRUE, FALSE)
 best_players <- best_players %>%
   mutate_at(vars(Player), funs(str_replace(., "\\*", "")))
