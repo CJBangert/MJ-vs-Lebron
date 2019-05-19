@@ -221,11 +221,46 @@ From that plot we can see that there is some variation amongnst the top players.
 
 # Hypothesis Testing
 
-So, to see if there is a statistically significant difference between Michael Jordan and Lebron James' player efficiency ratings, we need to fo some hypothesis testing.
+So, to see if there is a statistically significant difference between Michael Jordan and Lebron James' player efficiency ratings, we need to show some hypothesis testing.
 
 Null Hypothesis: Michael Jordan's Player Efficiency Rating being higher than Lebron's is likely due to random variation.
 
 
+```{r hypotest}
+library(dplyr)
+
+avg <- mean(best_players$`Efficiency Rating`)
+val <- best_players$`Efficiency Rating`
+
+std <- sqrt(mean(val^2) - mean(best_players$`Efficiency Rating`)^2)
+
+pn <- pnorm(27.91, mean=avg, sd=std, lower.tail = FALSE)
+pnl <- pnorm(27.59, mean=avg, sd=std, lower.tail = FALSE)
+
+pvalues <- pnorm(best_players$`Efficiency Rating`, mean=avg, sd=std, lower.tail = FALSE)
+
+a <- plot(pvalues,
+     xaxt = "n", 
+     type = "l", 
+     main = "CDF of the Standard Normal",
+     ylab="Probability Density")
+
+dvalues <- dnorm(best_players$`Efficiency Rating`, mean=avg, sd=std)
+b <- plot(dvalues, # Plot where y = values and x = index of the value in the vector
+     xaxt = "n", # Don't label the x-axis
+     type = "l", # Make it a line plot
+     main = "PDF of the Standard Normal",
+     xlab= "Z-score")
+
+
+```
+
+
+```{r hypo2}
+
+
+
+```
 
 
 
