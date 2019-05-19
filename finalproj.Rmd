@@ -163,13 +163,10 @@ Notice the minutes_played, games_played, year_from and year_to statistics have n
 ```{r drop_cols}
 library(SparkR)
 advanced_prepped<- within(advanced, rm("min_played", "year_from", "year_to", "games_played"))
-#advanced_prepped <- advanced_prepped %>% group_by("player")
-colnames(advanced_prepped)
-vals <- c("rank","eff_rating", "true_shooting_percent", "3p_attempt_rate",      
-  "ft_attempt_rate" , "off_rebound_percent" ,  "def_rebound_percent",   "total_rebound_percent", "assist_percent",       
- "steal_percent","block_percent","turnover_percent", "usage_percent", "off_win_share" ,"def_win_share", "win_share" ,"ws_per48min",   "off_plus_minus","def_plus_minus",  "plus_minus", "value_over_replace")
-advanced_prepped <- melt(advanced_prepped, id.vars= vals)
-ggplot(advanced_prepped, aes(, value)) + geom_bar(aes(fill = variable), 
+
+
+advanced_prepped <- melt(advanced_prepped, id.vars= "player")
+ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable), 
    width = 0.4, position = position_dodge(width=0.5), stat="identity") +  
    theme(legend.position="top", legend.title = 
    element_blank(),axis.title.x=element_blank(), 
@@ -205,7 +202,7 @@ best_players
 Now, we have data on the efficiency ratings of the best 250 NBA players in history (best in regard to this statistic). Lets look at a plot to try and get a visualization of how they compare to each other.
 ```{r visualize_best}
 #notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
-best_players %>% ggplot(aes(x=reorder(Player, `Efficiency Rating`), y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5))
+best_players %>% ggplot(aes(x=reorder(Player, `Efficiency Rating`), y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5)) + ggtitle("Top Players' Efficiency Ratings")+ xlab("Players") + ylab("Efficieny Rating")
 ```
 
 From that plot we can see that there is some variation amongnst the top players. The two tallest bars are MJ and Lebron.
