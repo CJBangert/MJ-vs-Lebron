@@ -175,7 +175,7 @@ ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable),
 Beautiful. 
 
 A good way to compare players is by efficiency rating, which is calculated by the following formula (notice the embedded LATEX):
-$$\frac{(Points + Rebounds + Assists + Steals + Blocks + MissedFieldGoals + MissedFreeThrows - Turnovers)}  {GamesPlayed} $$
+$$\frac{(Points + Rebounds + Assists + Steals + Blocks - MissedFieldGoals - MissedFreeThrows - Turnovers)}  {GamesPlayed} $$
 
 As we can see from the data, Lebron and Jordan are very close in these ratings: Jordan's efficiency rating is 27.9, and Lebron's is only slightly lower. This is illustrated in the following bar plot:
 
@@ -240,17 +240,19 @@ pnl <- pnorm(27.59, mean=avg, sd=std, lower.tail = FALSE)
 pvalues <- pnorm(best_players$`Efficiency Rating`, mean=avg, sd=std, lower.tail = FALSE)
 
 a <- plot(pvalues,
-     xaxt = "n", 
      type = "l", 
-     main = "CDF of the Standard Normal",
-     ylab="Probability Density")
+     main = "CDF of the Data Distribution",
+     ylab="Probability Density",
+     xlab = "Top 250 Players")
 
 dvalues <- dnorm(best_players$`Efficiency Rating`, mean=avg, sd=std)
-b <- plot(dvalues, # Plot where y = values and x = index of the value in the vector
-     xaxt = "n", # Don't label the x-axis
-     type = "l", # Make it a line plot
-     main = "PDF of the Standard Normal",
-     xlab= "Z-score")
+b <- plot(dvalues,
+     type = "l", 
+     main = "PDF of the Data Distribution",
+     xlab= "Top 250 Players")
+
+pn
+pnl
 
 
 ```
