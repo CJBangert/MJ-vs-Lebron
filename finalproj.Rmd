@@ -1,4 +1,3 @@
-
 ---
 title: "A thorough analysis between Michael Jordan and LeBron James"
 author: "Charles Bangert, Noah Tanenholtz, Ryan Dietz"
@@ -162,10 +161,9 @@ Here's another plot comparing the two, but we're going to make a comparison of m
 library(reshape2)
 
 advanced_prepped <- melt(advanced, id.vars='player')
- ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable), 
-   width = 0.4, position = position_dodge(width=0.5), stat="identity") + 
-   theme(legend.position="top", legend.title = 
-   element_blank(),axis.title.x=element_blank(), axis.title.y=element_blank())
+ggplot(advanced_prepped, aes(player, value)) +
+  geom_bar(aes(fill = variable), width = 0.4, position = position_dodge(width=0.5), stat="identity") +
+  theme(legend.position="top", legend.title = element_blank(),axis.title.x=element_blank(),   axis.title.y=element_blank())
 ```
 
 Notice the minutes_played, games_played, year_from and year_to statistics have numbers that are way higher than the other statistics, so it throws the scale off. Also, the rank column is irrelevant. We can filter that out to get a better-looking plot:
@@ -234,9 +232,13 @@ Now, we have data on the efficiency ratings of the best 250 NBA players in histo
 
 Notice that we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation between players. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
 ```{r visualize_best, warning=FALSE, message=FALSE}
-
-#notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
-best_players %>% ggplot(aes(x=reorder(Player, `Efficiency Rating`), y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5)) + ggtitle("Top Players' Efficiency Ratings")+ xlab("Players") + ylab("Efficieny Rating")
+best_players %>% 
+  ggplot(aes(x=reorder(Player, `Efficiency Rating`), y = `Efficiency Rating`)) +
+  geom_bar(stat = "identity", color = "red", fill = "steelblue")+
+  theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5)) + 
+  ggtitle("Top Players' Efficiency Ratings") + 
+  xlab("Players") + 
+  ylab("Efficieny Rating")
 ```
 
 From that plot we can see that there is some variation amongnst the top players. The two tallest bars are MJ and Lebron.
