@@ -250,26 +250,26 @@ So, to see if there is a statistically significant difference between Michael Jo
 
 Null Hypothesis: Michael Jordan's Player Efficiency Rating being higher than Lebron's is likely due to random variation.
 
-
+The following code calculates the mean and standard deviation, then plots the Cumulative disribution function(cdf) and the probability density function(pdf).
 ```{r hypotest}
 library(dplyr)
-
+#First, get the mean of the efficiency rating across all players
 avg <- mean(best_players$`Efficiency Rating`)
 val <- best_players$`Efficiency Rating`
-
+#Now, we get the standard deviation
 std <- sqrt(mean(val^2) - mean(best_players$`Efficiency Rating`)^2)
 
 pn <- pnorm(27.91, mean=avg, sd=std, lower.tail = FALSE)
 pnl <- pnorm(27.59, mean=avg, sd=std, lower.tail = FALSE)
-
+#get p values doing an upper tail test
 pvalues <- pnorm(best_players$`Efficiency Rating`, mean=avg, sd=std, lower.tail = FALSE)
-
+#This plots the cumulative distribution function across all of the top 250 players
 a <- plot(pvalues,
      xaxt = "n", 
      type = "l", 
      main = "CDF of the Standard Normal",
      ylab="Probability Density")
-
+#Now, we plot the probability density function
 dvalues <- dnorm(best_players$`Efficiency Rating`, mean=avg, sd=std)
 b <- plot(dvalues, # Plot where y = values and x = index of the value in the vector
      xaxt = "n", # Don't label the x-axis
@@ -279,7 +279,7 @@ b <- plot(dvalues, # Plot where y = values and x = index of the value in the vec
 
 
 ```
-
+As we can see from the pdf plot, there is a definite rightward skew. This is because in our sample, there exists less variation amongst the lower ranked players. This can be seen in the Top Player's Efficiency ratings plot. There exists bigger gaps in ratings between the top 20 or so and the rest of the sample.  
 
 ```{r hypo2}
 
