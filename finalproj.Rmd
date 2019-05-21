@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "320FinalProject"
 authors: "Charles Bangert, Noah Tanenholtz, Ryan Dietz"
@@ -266,3 +267,297 @@ pnl
 
 
 
+=======
+
+---
+title: "A thorough analysis between Michael Jordan and LeBron James"
+author: "Charles Bangert, Noah Tanenholtz, Ryan Dietz"
+date: "5/22/2019"
+output: 
+  html_document:
+    df_print: paged
+    css: style.css
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Final Project for CMSC320: Introduction to Data Science
+
+# Summary
+In lieu of a final exam, CMSC320 students will turn in a tutorial that will walk users through the entire data science pipeline: data curation, parsing, and management; exploratory data analysis; hypothesis testing and machine learning to provide analysis; and then the curation of a message or messages covering insights learned during the tutorial. Students may choose an application area and dataset(s) that are of interest to them; please feel free to be creative about this!
+
+Remember, the course resources page has a number of data repositories from where you can download data. You could also create your own dataset using scraping skills you have learned in class. We in fact, encourage this.
+
+The tutorial should be self-contained as an Rmarkdown document, and delivered as a GitHub statically-hosted Page (described below). You can see examples here: https://www.kaggle.com/kernels?sortBy=votes&group=everyone&pageSize=20&language=R
+
+In general, the tutorial should contain at least 1500 words of prose and 150 lines of (nonpadded, legitimate) R code, along with appropriate documentation, visualization, and links to any external information that might help the reader.
+
+#Setting up the libraries
+
+```{r libraries, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library("rvest")
+library(reshape2)
+library(SparkR)
+```
+
+#Getting the data 
+
+Data can be read in from CSV files using read_csv() and then stored into data frames with as.data.frame().
+
+```{r data, echo=TRUE, warning=FALSE, message=FALSE}
+csv <- read_csv("pergame_data.csv")  
+pergame <- csv %>% as.data.frame()
+pergame
+
+csv <- read_csv("totals_data.csv")
+totals <- csv %>% as.data.frame()
+totals
+
+csv <- read_csv("per36min.csv")
+per36min <- csv %>% as.data.frame()
+per36min
+
+csv <- read_csv("per100poss.csv")
+per100poss <- csv %>% as.data.frame()
+per100poss
+
+csv <- read_csv("advanced.csv")
+advanced <- csv %>% as.data.frame()
+advanced
+
+
+```
+
+
+#Basic Operations and tidying data
+
+To make the data column names more recognizable of what they mean, we are going to use some basic R operations to change the column names and even delete columns as a whole.
+
+
+Below is a way of changing column names is very easy and useful if you are going to change all of the column names. You must change the names in the order that they appear in the data frame.
+
+
+```{r basics}
+
+names(pergame) <- c("rank", "player", "year_from", "year_to", "games_played", "games_stared", "min_played", "fg_made", "fg_attempt", "fg_percent", "3p_made", "3p_attempt", "3p_percent", "2p_made", "2p_attempt", "2p_percent", "eff_fg_percent", "ft_made", "ft_att", "ft_percent", "off_rebounds", "def_rebounds", "total_rebounds", "assists", "steals", "blocks", "turnovers", "fouls", "points")
+pergame
+```
+
+Below is another way to change column names and is better to use when changing a few column names. You can change the column names in any order. However, it is a very repetive and unefficient way to change column names if you are changing all the names as shown above.
+
+```{r basics2}
+colnames(totals)[colnames(totals) == "Rk"] <- "rank"
+colnames(totals)[colnames(totals) == "Player"] <- "player"
+colnames(totals)[colnames(totals) == "From"] <- "year_from"
+colnames(totals)[colnames(totals) == "To"] <- "year_to"
+colnames(totals)[colnames(totals) == "G"] <- "games_played"
+colnames(totals)[colnames(totals) == "GS"] <- "games_started"
+colnames(totals)[colnames(totals) == "MP"] <- "min_played"
+colnames(totals)[colnames(totals) == "FG"] <- "fg_made"
+colnames(totals)[colnames(totals) == "FGA"] <- "fg_attempt"
+colnames(totals)[colnames(totals) == "FG."] <- "fg_percent"
+colnames(totals)[colnames(totals) == "X3P"] <- "3p_made"
+colnames(totals)[colnames(totals) == "X3PA"] <- "3p_attempt"
+colnames(totals)[colnames(totals) == "X3P."] <- "3p_percent"
+colnames(totals)[colnames(totals) == "X2P"] <- "2p_made"
+colnames(totals)[colnames(totals) == "X2PA"] <- "2p_attempt"
+colnames(totals)[colnames(totals) == "X2P."] <- "2p_percent"
+colnames(totals)[colnames(totals) == "eFG."] <- "eff_fg_percent"
+colnames(totals)[colnames(totals) == "FT"] <- "ft_made"
+colnames(totals)[colnames(totals) == "FTA"] <- "ft_attempt"
+colnames(totals)[colnames(totals) == "FT."] <- "ft_percent"
+colnames(totals)[colnames(totals) == "ORB"] <- "off_rebounds"
+colnames(totals)[colnames(totals) == "DRB"] <- "def_rebounds"
+colnames(totals)[colnames(totals) == "TRB"] <- "total_rebounds"
+colnames(totals)[colnames(totals) == "AST"] <- "assists"
+colnames(totals)[colnames(totals) == "STL"] <- "steals"
+colnames(totals)[colnames(totals) == "BLK"] <- "blocks"
+colnames(totals)[colnames(totals) == "TOV"] <- "turnovers"
+colnames(totals)[colnames(totals) == "PF"] <- "fouls"
+colnames(totals)[colnames(totals) == "POints"] <- "points"
+
+totals
+```
+
+#####If you looked over all the data that was read in, in the previous step, then you should of noticed a blank column in the dataset of per100poss and advanced. We are going to show the steps needed to delete the blank columns and then change the column names for the two datasets.
+
+```{r basics3}
+
+names(per36min) <- c("rank", "player", "year_from", "year_to", "games_played", "games_stared", "min_played", "fg_made", "fg_attempt", "fg_percent", "3p_made", "3p_attempt", "3p_percent", "2p_made", "2p_attempt", "2p_percent", "ft_made", "ft_att", "ft_percent", "off_rebounds", "def_rebounds", "total_rebounds", "assists", "steals", "blocks", "turnovers", "fouls", "points")
+per36min
+```
+
+We see that there is an error column in the per100poss data table named X29, you are going to need to know the column name to delete it. To delete the column, we set the error column to NULL.
+
+```{r basics4}
+per100poss$X29 <- NULL
+
+names(per100poss) <- c("rank", "player", "year_from", "year_to", "games_played", "games_stared", "min_played", "fg_made", "fg_attempt", "fg_percent", "3p_made", "3p_attempt", "3p_percent", "2p_made", "2p_attempt", "2p_percent", "ft_made", "ft_att", "ft_percent", "off_rebounds", "def_rebounds", "total_rebounds", "assists", "steals", "blocks", "turnovers", "fouls", "points", "off_rating", "def_rating")
+per100poss
+```
+
+We can also see that there are error columns in advanced data table named X19 and X24. You should also delete these columns by setting them to NULL.
+
+```{r basics5}
+advanced$X19 <- NULL
+advanced$X24 <- NULL
+ 
+names(advanced) <- c("rank", "player", "year_from", "year_to", "games_played", "min_played", "eff_rating", "true_shooting_percent", "3p_attempt_rate", "ft_attempt_rate", "off_rebound_percent", "def_rebound_percent", "total_rebound_percent", "assist_percent", "steal_percent", "block_percent", "turnover_percent", "usage_percent", "off_win_share", "def_win_share", "win_share", "ws_per48min", "off_plus_minus", "def_plus_minus", "plus_minus", "value_over_replace")
+advanced
+```
+
+#Visualization
+
+Creating plots is a great way to help readers visualize the data. Here's a simple plot displaying field goals made per 36 minutes of playing time:
+
+```{r firstPlot , warning=FALSE, message=FALSE}
+
+per36min %>% 
+  ggplot(aes(x = player, y = fg_made)) + 
+  geom_bar(stat = "identity", color = "red") + 
+  labs(title = "Field Goals Made Per 36 Minutes of Playing Time", x = "Players", y = "Field Goals Made") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+Looks good for MJ here. 
+
+Here's another plot comparing the two, but we're going to make a comparison of more then one stat all in one plot.
+
+
+```{r anotherplot, warning=FALSE, message=FALSE}
+library(reshape2)
+
+advanced_prepped <- melt(advanced, id.vars='player')
+ ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable), 
+   width = 0.4, position = position_dodge(width=0.5), stat="identity") + 
+   theme(legend.position="top", legend.title = 
+   element_blank(),axis.title.x=element_blank(), axis.title.y=element_blank())
+```
+
+Notice the minutes_played, games_played, year_from and year_to statistics have numbers that are way higher than the other statistics, so it throws the scale off. Also, the rank column is irrelevant. We can filter that out to get a better-looking plot:
+```{r drop_cols, warning=FALSE, message=FALSE}
+library(SparkR)
+advanced_prepped<- within(advanced, rm("min_played", "year_from", "year_to", "games_played","rank"))
+
+
+advanced_prepped <- melt(advanced_prepped, id.vars=c("player") )
+ggplot(advanced_prepped, aes(player, value)) + geom_bar(aes(fill = variable), 
+   width = 0.4, position = position_dodge(width=0.5), stat="identity") +  
+   theme(legend.position="top", legend.title = 
+   element_blank(),axis.title.x=element_blank(), axis.title.y=element_blank())
+```
+
+Beautiful.
+
+A good way to compare players is by efficiency rating, which is calculated by the following formula (notice the embedded LATEX):
+$$\frac{(Points + Rebounds + Assists + Steals + Blocks + MissedFieldGoals + MissedFreeThrows - Turnovers)}  {GamesPlayed} $$
+
+As we can see from the data, Lebron and Jordan are very close in these ratings: Jordan's efficiency rating is 27.9, and Lebron's is only slightly lower. This is illustrated in the following bar plot:
+
+
+To make a bar plot, you can use the ggplot() function. Here, I set the x axis to be the players, and the y axis to be the efficiencty rating. I also changed the color of the outline to red and the fill to steel blue, because it looks cool. I also used the minimal theme here. 
+
+```{r plottingMJvsJordan}
+advanced %>% 
+  ggplot(aes(x=player, y = eff_rating)) +
+  geom_bar(stat = "identity", color = "red", fill = "steelblue") +
+  labs(title="Effeciency Rating of Each Player", x="Players", y="Effeciency Rating") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+As you can see from the plot, you can barely notice any difference between the two. Further hypothesis testing is required to see if this difference is signnificant. To be able to get some context to do this, we have to pull in more data on the efficiency rating of compaerable players. To do this, we're going to scrape data from basketball-reference.com using the rvest package.
+
+
+```{r scrape_data, warning=FALSE, message=FALSE}
+library("rvest")
+
+url <- "https://www.basketball-reference.com/leaders/per_career.html#nba::none"
+
+best_players_raw <- url %>%
+  read_html() %>%
+  html_nodes("table") %>% .[1] %>%
+  html_table()
+best_players <- best_players_raw %>% as.data.frame() 
+#rename the "PER" column to better indicate what it stands for
+names(best_players)[3] <-  "Efficiency Rating"
+best_players
+```
+
+An asterisk next to a player's name indicates that they are a hall of famer. Because we now have a much larger dataset it is a good idea to add a logical column to the data frame that will indicate whether a player is a hall of famer or not. You should also remove the asterisk next to each player that has one. This is shown below:
+
+```{r tidy_data}
+
+best_players["Hall Of Famer"] <- ifelse(grepl("\\S+\\s\\S+\\*", best_players$Player), TRUE, FALSE)
+best_players <- best_players %>%
+  mutate_at(vars(Player), funs(str_replace(., "\\*", "")))
+best_players
+```
+
+
+Now, we have data on the efficiency ratings of the best 250 NBA players in history (best in regard to this statistic). Lets look at a plot to try and get a visualization of how they compare to each other.
+
+
+Notice that we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation between players. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
+```{r visualize_best, warning=FALSE, message=FALSE}
+
+#notice we remove the x-axis labels with element_blank, as there are just too many names to fit in that small space. The names aren't important here, we just want to show variation. I also ordered the bars of the plot to show how much better the top players are compared to the rest. You can also more clearly see the difference between MJ and Lebron's rating (the tallest two bars)
+best_players %>% ggplot(aes(x=reorder(Player, `Efficiency Rating`), y = `Efficiency Rating`))+geom_bar(stat = "identity", color = "red", fill = "steelblue")+theme(axis.text.x = element_blank(), plot.title = element_text(hjust = .5)) + ggtitle("Top Players' Efficiency Ratings")+ xlab("Players") + ylab("Efficieny Rating")
+```
+
+From that plot we can see that there is some variation amongnst the top players. The two tallest bars are MJ and Lebron.
+
+
+# Hypothesis Testing
+
+
+So, to see if there is a statistically significant difference between Michael Jordan and Lebron James' player efficiency ratings, we need to show some hypothesis testing.
+
+
+Null Hypothesis: Michael Jordan's Player Efficiency Rating being higher than Lebron's is likely due to random variation.
+
+
+```{r hypotest}
+library(dplyr)
+
+avg <- mean(best_players$`Efficiency Rating`)
+val <- best_players$`Efficiency Rating`
+
+std <- sqrt(mean(val^2) - mean(best_players$`Efficiency Rating`)^2)
+
+pn <- pnorm(27.91, mean=avg, sd=std, lower.tail = FALSE)
+pnl <- pnorm(27.59, mean=avg, sd=std, lower.tail = FALSE)
+
+pvalues <- pnorm(best_players$`Efficiency Rating`, mean=avg, sd=std, lower.tail = FALSE)
+
+a <- plot(pvalues,
+     xaxt = "n", 
+     type = "l", 
+     main = "CDF of the Standard Normal",
+     ylab="Probability Density")
+
+dvalues <- dnorm(best_players$`Efficiency Rating`, mean=avg, sd=std)
+b <- plot(dvalues, # Plot where y = values and x = index of the value in the vector
+     xaxt = "n", # Don't label the x-axis
+     type = "l", # Make it a line plot
+     main = "PDF of the Standard Normal",
+     xlab= "Z-score")
+
+
+```
+
+
+```{r hypo2}
+
+
+
+```
+
+
+
+
+>>>>>>> bc68f6d45b7cdc0747c55a878480b6c3a806fa48
