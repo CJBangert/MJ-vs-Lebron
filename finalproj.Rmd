@@ -316,7 +316,7 @@ std2 <- sd(vec)
 n <- 2
 
 #creating the t-statisic using the formula of sample mean of difference - population difference mean / (standard deviation of the sample / number of samples)
-t <- (two - difference) / (std2/sqrt(n))
+t <- (MJ_LBJ_difference - difference) / (std2/sqrt(n))
 
 #using the t value and the degree of freedom which is n-1, we use the t distribution table of critical values to match our degree of freedom and out t value to get the overall p-value
 
