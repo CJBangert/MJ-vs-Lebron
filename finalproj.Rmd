@@ -14,13 +14,18 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Final Project for CMSC320: Introduction to Data Science
 
 # Summary
-It is widley debated between basketball fans, sportscasters, and sports analysts on which NBA player is the greatest of all time. Some people say that it is Michael Jordan, while others say that is LeBron James. This markdown is a tutorial that will walk you through the entire data science pipeline and will provide you with a thorough analysis of data, leading to a determination on the which player is the greatest of all time. Our results will be discussed at the end.
+It is widely debated between basketball fans, sportscasters, and sports analysts on which NBA player is the greatest of all time. Some people say that it is Michael Jordan, while others say that is LeBron James. This markdown is a tutorial that will walk you through the entire data science pipeline and will provide you with a thorough analysis of data, leading to a determination on the which player is the greatest of all time. Our results will be discussed at the end.
 
 We have provided some resources that may interest you on the popularity of this debate between MJ and LeBron and who is the better player. 
 
-One resource is from CBS Sports which surveyed 100 NCAA basketball coaches in the Fall of 2018 on who they belive is the better player. MJ recieved 82% of the vote while LeBron recieved 18% of the vote. Find out more here: https://www.cbssports.com/college-basketball/news/candid-coaches-whos-the-real-goat-michael-jordan-or-lebron-james/. 
+One resource is from CBS Sports which surveyed 100 NCAA basketball coaches in the Fall of 2018 on who they believe is the better player. MJ received 82% of the vote while LeBron received 18% of the vote. Find out more here: https://www.cbssports.com/college-basketball/news/candid-coaches-whos-the-real-goat-michael-jordan-or-lebron-james/. 
 
-Another resource that may interest you is from USA Today: https://www.usatoday.com/story/sports/nba/2018/05/13/michael-jordan-lebron-james-which-one-greatest-all-time/602231002/. This resource also includes some ananlysis on in-game stats between the two players.
+Another resource that may interest you is from USA Today: https://www.usatoday.com/story/sports/nba/2018/05/13/michael-jordan-lebron-james-which-one-greatest-all-time/602231002/. This resource also includes some analysis on in-game stats between the two players.
+
+Our last source is a video from ESPN that shows clips of LeBron and Michael and how they perform during games as well as the debates on this argument from their analysts based on each of their opinions: https://www.youtube.com/watch?v=icf9-GCP2M0. 
+
+These resources may also be helpful on influencing your decision of who is the better player, LeBron or MJ.
+
 
 #Setting up the libraries
 
@@ -112,7 +117,7 @@ colnames(totals)[colnames(totals) == "POints"] <- "points"
 totals
 ```
 
-#####If you looked over all the data that was read in, in the previous step, then you should of noticed a blank column in the dataset of per100poss and advanced. We are going to show the steps needed to delete the blank columns and then change the column names for the two datasets.
+If you looked over all the data that was read in, in the previous step, then you should of noticed a blank column in the dataset of per100poss and advanced. We are going to show the steps needed to delete the blank columns and then change the column names for the two datasets.
 
 ```{r basics3}
 
@@ -183,18 +188,18 @@ $$\frac{(Points + Rebounds + Assists + Steals + Blocks + MissedFieldGoals + Miss
 As we can see from the data, Lebron and Jordan are very close in these ratings: Jordan's efficiency rating is 27.9, and Lebron's is only slightly lower. This is illustrated in the following bar plot:
 
 
-To make a bar plot, you can use the ggplot() function. Here, I set the x axis to be the players, and the y axis to be the efficiencty rating. I also changed the color of the outline to red and the fill to steel blue, because it looks cool. I also used the minimal theme here. 
+To make a bar plot, you can use the ggplot() function. Here, I set the x axis to be the players, and the y axis to be the efficiency rating. I also changed the color of the outline to red and the fill to steel blue, because it looks cool. I also used the minimal theme here. 
 
 ```{r plottingMJvsJordan}
 advanced %>% 
   ggplot(aes(x=player, y = eff_rating)) +
   geom_bar(stat = "identity", color = "red", fill = "steelblue") +
-  labs(title="Effeciency Rating of Each Player", x="Players", y="Effeciency Rating") +
+  labs(title="Efficiency Rating of Each Player", x="Players", y="Efficiency Rating") +
   theme(plot.title = element_text(hjust = 0.5))
 
 ```
 
-As you can see from the plot, you can barely notice any difference between the two. Further hypothesis testing is required to see if this difference is signnificant. To be able to get some context to do this, we have to pull in more data on the efficiency rating of compaerable players. To do this, we're going to scrape data from basketball-reference.com using the rvest package.
+As you can see from the plot, you can barely notice any difference between the two. Further hypothesis testing is required to see if this difference is significant. To be able to get some context to do this, we have to pull in more data on the efficiency rating of comparable players. To do this, we're going to scrape data from basketball-reference.com using the rvest package.
 
 
 ```{r scrape_data, warning=FALSE, message=FALSE}
@@ -244,7 +249,7 @@ So, to see if there is a statistically significant difference between Michael Jo
 
 Null Hypothesis: Michael Jordan's Player Efficiency Rating being higher than Lebron's is not likely due to random variation.
 
-The following code calculates the mean and standard deviation, then plots the Cumulative disribution function(cdf) and the probability density function(pdf).
+The following code calculates the mean and standard deviation, then plots the Cumulative distribution function(cdf) and the probability density function(pdf).
 
 First, get the mean of the efficiency rating across all players.
 ```{r hypotest}
@@ -289,7 +294,7 @@ b <- plot(dvalues, # Plot where y = values and x = index of the value in the vec
 
 As we can see from the pdf plot, there is a definite rightward skew. This is because in our sample, there exists less variation amongst the lower ranked players. This can be seen in the Top Player's Efficiency ratings plot. There exists bigger gaps in ratings between the top 20 or so and the rest of the sample.  
 
-We set our signifance level to .05.
+We set our significance level to .05.
 ```{r hypo2}
 alpha = .05
 ```
@@ -336,7 +341,7 @@ We see that our t value is 1.720382 which matches with the p-value of .15.
 pval <- .15
 ```
 
-We then compare the pvalue to the significance level and see that the pvalue is greater then the signifance level, meaning we we can not reject the null hypothesis.
+We then compare the pvalue to the significance level and see that the pvalue is greater then the significance level, meaning we can not reject the null hypothesis.
 ```{r hypo10}
 result <- pval >= alpha
 result
@@ -344,7 +349,9 @@ result
 
 Null Hypothesis: Michael Jordan's Player Efficiency Rating being higher than Lebron's is not likely due to random variation.
 
-We do not reject the null hypothesis. We have found statisically significant evidence, that Michael Jordan's efficiency rating is significantly higher then Lebron James' rating and that this difference is not likely due to random variation in the data. 
+We do not reject the null hypothesis. We have found statistically significant evidence, that Michael Jordan's efficiency rating is significantly higher than Lebron James' rating and that this difference is not likely due to random variation in the data. 
 
 #Conclusion
-From the overall raw statistics, Lebron and Jordan appear to be neck and neck. However, after performing a hypothesis test on the efficiency rating, we conclude saying that, according to our calculations, Jordan is the better player. However, it still could be agrued that Lebron faces better competition in a more challenging league (or vice versa), so the question is still up for debate. 
+
+From the overall raw statistics, Lebron and Jordan appear to be neck and neck. However, after performing a hypothesis test on the efficiency rating, we conclude saying that, according to our calculations, Jordan is the better player. However, it still could be argued that LeBron faces better competition in a more challenging league (or vice versa), so the question is still up for debate. We hope that our findings will influence sports fans' and analysts' debates and add to the conversation on which of the two players are better. 
+
