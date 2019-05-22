@@ -279,7 +279,7 @@ a <- plot(pvalues,
      ylab="Probability Density")
 ```
 
-Finally, we plot the probability density function.
+Finally, we plot the probability density function. We do this by taking the dnorm of the player's efficiency to get the dvalues to plot.
 
 ```{r plot_density}
 dvalues <- dnorm(best_players$`Efficiency Rating`, mean=avg, sd=std)
@@ -293,6 +293,8 @@ b <- plot(dvalues, # Plot where y = values and x = index of the value in the vec
 ```
 
 As we can see from the pdf plot, there is a definite rightward skew. This is because in our sample, there exists less variation amongst the lower ranked players. This can be seen in the Top Player's Efficiency ratings plot. There exists bigger gaps in ratings between the top 20 or so and the rest of the sample.  
+
+Our next step is to find if the difference between MJ and Lebron's efficiency rating is statisically significant or not. This will allow us to either reject or not reject our null hypothesis that the Mj's efficiency rating being higher than Lebron's is not due to random variation, but actually due because Michael Jordan's stats are above Lebron's.
 
 We set our significance level to .05.
 ```{r hypo2}
